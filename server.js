@@ -23,7 +23,13 @@ app.get('/:room', (req, res) => {
 io.on('connection', socket => {
   socket.on('join-room', (roomId, userId) => {
     socket.join(roomId)
+    // run the user-connected function if socket detects new connection
     socket.to(roomId).broadcast.emit('user-connected', userId)
+
+    // run disconnect function if user leaves room
+    socket.on('disconnect', () => {
+     socket.to(roomId).broadcast.emit('user-disconnected', userId)
+   })
   })
 })
 server.listen(3000)

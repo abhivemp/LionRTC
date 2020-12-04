@@ -7,7 +7,7 @@
     <script>
       const ROOM_ID = "<%= roomId %>"
     </script>
-    <script src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js"></script>
+    <script defer src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js"></script>
 
     <script src= "/socket.io/socket.io.js" defer></script>
     <script src="script.js" defer></script>
@@ -27,11 +27,18 @@
         height: 100%;
         object-fit: cover;
       }
+
     </style>
   </head>
   <body>
     <!-- Each person has their own grid -->
-    <div id="video-grid">
-    </div>
+    <div id="video-grid"></div>
+    <div> 
+      <input type = "text" id = "messageBox" /> 
+      <button id = "sendButton">Send text message</button> 
+   </div>
+   <div id = "chatBox">
+     <iframe width=500px height=300px></iframe>
+   </div>
   </body>
 </html>

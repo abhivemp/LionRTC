@@ -39,13 +39,13 @@ navigator.mediaDevices.getUserMedia({
     })
     console.log('Anotha one!!')
   })
-
+// Connect user to room and append saying they have been connected
   socket.on('user-connected', name => {
     appendMessage(`${name} connected`)
     connectToNewUser(name, stream)
   })
 })
-
+// Append the message to the page if the chat-function action triggered
 socket.on('chat-message', data => {
   appendMessage(`${data.name}: ${data.message}`)
 })
@@ -58,7 +58,7 @@ socket.on('user-disconnected', name => {
 myPeer.on('open', id => {
   socket.emit('join-room', ROOM_ID, id)
 })
-
+// Add the user to the existing stream
 function connectToNewUser(userId, stream) {
   const call = myPeer.call(userId, stream)
   const video = document.createElement('video')

@@ -5,6 +5,7 @@ const io = require('socket.io')(server)
 const { v4: uuidV4} = require('uuid')
 const users = {}
 
+// Tag our express engine to our node server for compilation purposes
 app.set('view engine', 'ejs')
 app.use(express.static('public'))
 
@@ -31,7 +32,7 @@ io.on('connection', socket => {
       socket.broadcast.emit('user-disconnected', users[socket.id])
       delete users[socket.id]
     })
-
+    // user connected. Broadcast teh chat to other participants in the room.
     socket.on('send-message', message => {
       socket.broadcast.emit('chat-message', { message: message, name: users[socket.id] })
     })

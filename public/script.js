@@ -1,29 +1,11 @@
-//import {msg} from 'room.ejs'
-
-// this socket connects to root path
+// This socket connects to root path
 const socket = io('/')
 const videoGrid = document.getElementById('video-grid')
 const msgContainer = document.getElementById('message-container')
 const msgForm = document.getElementById('send-container')
 const msgInput = document.getElementById('message-input')
 
-const name = prompt('What is your name?')
 appendMessage('You joined')
-//socket.emit('new-user', name)
-
-socket.on('chat-message', data => {
-  appendMessage(`${data.name}: ${data.message}`)
-})
-
-socket.on('user-connected', userId => {
-  appendMessage(`${name} connected`)
-  connectToNewUser(userId, stream)
-})
-
-socket.on('user-disconnected', userId => {
-  if (peers[userId]) peers[userId].close()
-  appendMessage(`${name} disconnected`)
-})
 
 msgForm.addEventListener('submit', e => {
   e.preventDefault()
@@ -33,12 +15,13 @@ msgForm.addEventListener('submit', e => {
   msgInput.value = ''
 })
 
-// Basic Peer configurations for dyanamic id generation with the uuid package
+// Basic Peer configurations for dynamic id generation with the uuid package
 const myPeer = new Peer(undefined, {
   host: '/',
   port: '3001'
 })
-// user's personal video element. We mute them because we don't want to them to see themselves
+
+// User's personal video element. We mute them because we don't want to them to hear themselves
 const myVideo = document.createElement('video')
 myVideo.muted = true
 const peers = {}
@@ -57,17 +40,20 @@ navigator.mediaDevices.getUserMedia({
     console.log('Anotha one!!')
   })
 
-  /*socket.on('user-connected', userId => {
+  socket.on('user-connected', name => {
     appendMessage(`${name} connected`)
-  })*/
+    connectToNewUser(name, stream)
+  })
 })
 
-/*
-socket.on('user-connected', name => {
-  appendMessage(`${name} connected`)
-})*/
+socket.on('chat-message', data => {
+  appendMessage(`${data.name}: ${data.message}`)
+})
 
-
+socket.on('user-disconnected', name => {
+  appendMessage(`${name} disconnected`)
+  if (peers[name]) peers[name].close()
+})
 
 myPeer.on('open', id => {
   socket.emit('join-room', ROOM_ID, id)
